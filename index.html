@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Google's PALM 2 Language Model</title>
+</head>
+
+<body>
+    <h1>Google's PALM 2 Language Model</h1>
+    <form id="apiForm">
+        <label for="userInput">Input:</label><br />
+        <textarea id="userInput" name="userInput" rows="4" cols="50"></textarea><br />
+        <input type="submit" value="Submit" />
+    </form>
+    <p id="output">Output:</p>
+    ​
+    <script>
+        const API_ENDPOINT = '';
+        const PROJECT_ID = '';
+        const MODEL_ID = 'text-bison';
+        const AUTH_TOKEN =
+            '';
+
+        const form = document.getElementById('apiForm');
+        const outputPara = document.getElementById('output');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const userInput = document.getElementById('userInput').value;
+            console.log('User Input: ', userInput);
+
+            const url = `https://${API_ENDPOINT}/v1/projects/${PROJECT_ID}/locations/us-central1/publishers/google/models/${MODEL_ID}:predict`;
+            console.log('API Endpoint: ', url);
+
+            const body = {
+                instances: [{ content: userInput }],
+                parameters: {
+                    temperature: 0.1,
+                    maxOutputTokens: 256,
+                    topP: 0.46,
+                    topK: 16,
+                },
+            };
+
+            console.log('Request Body: ', body);
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${AUTH_TOKEN}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            })
+                .then((response) => {
+                    console.log('API Response: ', response);
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log('API Data: ', data);
+                    if (data.predictions && data.predictions.length > 0 && data.predictions[0].content) {
+                        outputPara.textContent = `Output: ${data.predictions[0].content}`;
+                    } else {
+                        console.log('Invalid or empty predictions in API data: ', data);
+                        outputPara.textContent = `No output received from API`;
+                    }
+                })
+                .catch((error) => {
+                    console.log('API Error: ', error);
+                    outputPara.textContent = `Error: ${error}`;
+                });
+        });
+    </script>
+</body>
+
+</html>
