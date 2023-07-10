@@ -1,0 +1,25 @@
+/* mic button */
+.microphone-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border: none;
+  background-color: #007bff; /* Change to desired background color */
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Style the microphone icon */
+.microphone-icon {
+  width: 60%;
+  fill: white;
+}
+
+/* Dark blue style when button is clicked */
+.microphone-button.clicked {
+  background-color: #000080; /* Dark blue */
+}
